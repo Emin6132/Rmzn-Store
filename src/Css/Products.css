@@ -1,0 +1,125 @@
+.Card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    margin: 20px;
+    width: 420px;
+    min-width: 420px;
+    background-color: rgba(194, 194, 194, 0.24);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    height: 480px;
+}
+.Card-Top{
+    height: 100%;
+    width: 100%;
+}
+.products-container {
+    margin-top: 100px;
+    margin-bottom: 200px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.products-container-title {
+    color: rgb(152, 152, 152);
+    align-items: flex-start;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    border-bottom: 3px solid lightgray;
+    font-weight: 600;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 30px;
+}
+.delete-product-button{
+    transition: 300ms;
+    cursor: pointer;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    background-color: rgba(255, 0, 0, 0.524);
+    padding: 10px;
+    border: none;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    box-shadow: rgba(204, 23, 23, 0.35) 0px 5px 15px;
+    position: absolute;
+}
+.delete-product-button:hover{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color:red ;
+}
+.delete-product-button:active{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color:red ;
+}
+
+.product-link {
+    text-decoration: none;
+}
+
+.products {
+    justify-content: center;
+    overflow-x: auto;
+    height: auto;
+    width: 90%;
+    display: flex;
+}
+.product-img-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(246, 246, 246);
+    height: 75%;
+}
+.product-img {
+    max-height: 300px;
+    min-width: 300px;
+    max-width: 360px;
+}
+
+.other-imgs {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: white;
+    display: flex;
+    width: 100%;
+}
+
+.other-img {
+    padding: 5px;
+    width: 17%;
+}
+
+.product-title {
+    margin: 15px 0px 0px 0px;
+    font-size: 17px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: black;
+}
+
+.product-whom {
+    font-size: 15px;
+    margin: 3px 0px 3px 0px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: gray;
+}
+
+.product-price {
+    color: black;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-top: 8px;
+}
