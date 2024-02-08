@@ -2,12 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import "../Css/ProductsDetail.css"
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useProductsListener } from "../config/firebase"
 
 
 const ProductsDetail = (props) => {
+    const bestSellingProducts = useProductsListener();
     const { productId } = useParams();
-    const product = props.recommendedProducts.find((product) => product.id === productId);
-    const { img, smallImg1, smallImg2, smallImg3, smallImg4, smallImg5, title, price, numberOfProducts, shoesSize } = product;
+    const product = bestSellingProducts.find((prdct) => prdct.uid === productId);
+    const { img, smallImg1, smallImg2, smallImg3, smallImg4, smallImg5, name, price, numberOfProducts, shoesSize } = product;
     const [changeImg, setChangeImg] = useState(img)
     const [numberWarning, setNumberWarning] = useState(false)
     const [sizeNumber, setSizeNumber] = useState(shoesSize)
@@ -31,6 +33,7 @@ const ProductsDetail = (props) => {
                 setNumberWarning(true)
                 return;
             } else if (sizeNumber > 34) {
+
                 setNumberWarning(false)
                 props.handleClick(product)
             }
@@ -64,10 +67,10 @@ const ProductsDetail = (props) => {
                 <div className="product-details-right-detail-container">
                     <div className='product-details-right-detail-container-top'>
                         <p className='product-details-title'>
-                            {title}
+                            {name}
                         </p>
                         <p className='product-details-price'>
-                        ₺{price}.9
+                            ₺{price}.9
                         </p>
                         {numberOfProducts > 0 && numberOfProducts < 4 && <div className='numberRemainingProducts'>
                             Son {numberOfProducts} ürün

@@ -3,10 +3,10 @@ import { v4 as uuidv4 } from "uuid"
 import '../Css/AddNewProduct.css'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { db, database } from "../config/firebase"
+import { addDoc, collection } from 'firebase/firestore'
 
-
-
-const AddNewProduct = ({ setRecommendedProducts }) => {
+const AddNewProduct = () => {
   const [productName, setProductName] = useState("")
   const [productPrice, setProductPrice] = useState("")
   const [productNumber, setProductNumber] = useState("")
@@ -19,6 +19,7 @@ const AddNewProduct = ({ setRecommendedProducts }) => {
   const [productOtherImgThree, setProductOtherImgThree] = useState("")
   const [productOtherImgFour, setProductOtherImgFour] = useState("")
   const [productOtherImgFive, setProductOtherImgFive] = useState("")
+  const ref = collection(db, "bestSellingProducts")
   const [exampleCardView, setExampleCardView] = useState(false)
 
   const VisibleExampleCard = (e) => {
@@ -30,26 +31,27 @@ const AddNewProduct = ({ setRecommendedProducts }) => {
     }
   }
   const history = useNavigate();
-  
+
   const AddNewProduct = (e) => {
     e.preventDefault()
-    setRecommendedProducts((prevState) => [...prevState, {
-      id: uuidv4(),
+    const uid = database.currentUser?.uid
+    if (!uid) return;
+    addDoc(ref, {
+      uid: uid,
       img: productMainImg,
       smallImg1: productOtherImgOne,
       smallImg2: productOtherImgTwo,
       smallImg3: productOtherImgThree,
       smallImg4: productOtherImgFour,
       smallImg5: productOtherImgFive,
-      title: productName,
+      name: productName,
       price: productPrice,
       company: productCompany,
       color: productColor,
       whom: productWhom,
       numberOfProducts: productNumber,
       amount: 1,
-    }])
-    
+    })
     toast.success("Ürün Eklendi", {
       className: "toast-message"
     })
@@ -145,7 +147,13 @@ const AddNewProduct = ({ setRecommendedProducts }) => {
               </div>
               <div className="new-product-input-container">
                 <label htmlFor="ProductTitle" className='new-product-input-container-label'>Ürün Kim İçin:</label>
-                <input type="text" className='new-product-input-container-input' onChange={(e) => setProductWhom(e.target.value)} value={productWhom} />
+                <select id="whom" className='new-product-input-container-input' onChange={(e) => setProductWhom(e.target.value)} value={productWhom}>
+                  <option value="Unisex">Unisex</option>
+                  <option value="Yetişkin Erkek İçin">Yetişkin Erkek İçin</option>
+                  <option value="Erkek Çocuk İçin">Erkek Çocuk İçin</option>
+                  <option value="Yetişkin Kadın İçin">Yetişkin Kadın İçin</option>
+                  <option value="Kız Çocuk İçin">Kız Çocuk İçin</option>
+                </select>
               </div>
               <div className="new-product-input-container">
                 <label htmlFor="ProductTitle" className='new-product-input-container-label'>Ürün Adeti:</label>

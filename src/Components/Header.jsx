@@ -2,7 +2,7 @@ import { useState } from "react"
 import { signOut } from "firebase/auth";
 import "../Css/Header.css"
 import { Link } from "react-router-dom"
-import { database } from '../config/Config';
+import { database } from '../config/firebase';
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
 
@@ -34,13 +34,14 @@ const Header = ({ size, adminLogin, login, setLogin, setAdminLogin, setAdminSett
             setAdminLogin(false)
         })
     }
+    
     const navigateAddProduct = () => {
         history('/add-product')
     }
     return (
         <header className='header'>
             <div className="header-left">
-                <div className="header-logo"><Link to="/"><img src="/r.png" className="header-logo-img" /></Link></div>
+                <div className="header-logo"><Link to="/"><img src="/logo.png" className="header-logo-img" /></Link></div>
                 <button onClick={menuOpenButton} className="mobile-menu-open-button"><i className="fa-solid fa-bars-staggered mobile-menu-open-button-icon"></i>Menu</button>
             </div>
             <div className={`${menuOpen ? "header-mobile-menu-open" : "header-mobile-menu"}`}>
@@ -61,7 +62,7 @@ const Header = ({ size, adminLogin, login, setLogin, setAdminLogin, setAdminSett
             </div>
             <div className={`${adminLogin ? 'admin-header-navigation' : 'header-navigation'}`}>
                 <li className={`${adminLogin ? "navigation-option add-product-icon" : "hidden"}`} onClick={navigateAddProduct}><i className="fa-regular fa-square-plus add-product-icon"></i></li>
-                {adminLogin && <li className='navigation-option' onClick={visibleAdminSettings} ><i class="fa-solid fa-gear admin-settings"></i></li>}
+                {adminLogin && <li className='navigation-option' onClick={visibleAdminSettings} ><i className="fa-solid fa-gear admin-settings"></i></li>}
                 {adminLogin == false && <li className='navigation-option'><i className="fa-regular fa-heart option-icon"></i></li>}
                 <li className='navigation-option'><Link to="/shopping-basket" className="navigation-option"><i className="fa-solid fa-bag-shopping"></i><div className="basket-in-product-number">{size}</div></Link></li>
                 <li className={`${login ? "hidden" : "navigation-option"}`}><Link to="/login" className={`${login ? "hidden-login-link" : "login-link"}`}><i className="fa-regular fa-user login-icon"></i></Link></li>
