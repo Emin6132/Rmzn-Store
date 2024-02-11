@@ -21,7 +21,10 @@ const AddNewProduct = () => {
   const ref = collection(db, "bestSellingProducts")
   const [exampleCardView, setExampleCardView] = useState(false)
   const [productImgTypeFile, setProductImgTypeFile] = useState(true)
-  const [changeTypeButtonText, setChangeTypeButtonText ] = useState("URL")
+  const [changeTypeButtonText, setChangeTypeButtonText] = useState("URL")
+  const history = useNavigate();
+  const [selectedSizes, setSelectedSizes] = useState([]);
+
 
   const VisibleExampleCard = (e) => {
     e.preventDefault()
@@ -31,7 +34,6 @@ const AddNewProduct = () => {
       setExampleCardView(false)
     }
   }
-  const history = useNavigate();
 
   const AddNewProduct = (e) => {
     e.preventDefault()
@@ -51,6 +53,7 @@ const AddNewProduct = () => {
       company: productCompany,
       color: productColor,
       whom: productWhom,
+      shoesNumbers: selectedSizes,
       numberOfProducts: productNumber,
       amount: 1,
     })
@@ -73,6 +76,8 @@ const AddNewProduct = () => {
     setProductOtherImgFour("")
     setProductOtherImgFive("")
   }
+
+
   const productImgsTypeChange = (e) => {
     e.preventDefault()
     if (productImgTypeFile == true) {
@@ -83,6 +88,15 @@ const AddNewProduct = () => {
       setChangeTypeButtonText("URL")
     }
   }
+
+
+  const handleSizeSelection = (size) => {
+    if (selectedSizes.includes(size)) {
+      setSelectedSizes(selectedSizes.filter(item => item !== size));
+    } else {
+      setSelectedSizes([...selectedSizes, size]);
+    }
+  };
   return (
     <div className='AddNewProductPage'>
       <div className='add-new-product-containers'>
@@ -177,6 +191,19 @@ const AddNewProduct = () => {
                 <label htmlFor="ProductTitle" className='new-product-input-container-label'>Ürün Adeti:</label>
                 <input type="number" className='new-product-input-container-input' onChange={(e) => setProductNumber(e.target.value)} value={productNumber} />
               </div>
+            </div>
+
+            <div className="choose-shoes-number-table">
+              {[35, 35.5, 36, 36.5, 37, 37.5, 38, 38.5, 39, 39.5, 40, 40.5, 41, 41.5, 42, 42.5, 43, 43.5, 44, 44.5, 45, 45.5, 46, 46.5,].map(size =>
+                <button
+                  key={size}
+                  className='shoes-number-table'
+                  onClick={(e) => { e.preventDefault(), handleSizeSelection(size) }}
+                  style={{ backgroundColor: selectedSizes.includes(size) ? 'black' : 'white', color: selectedSizes.includes(size) ? 'white' : 'black' }}
+                >
+                  {size}
+                </button>
+              )}
             </div>
           </div>
           <button className='add-new-product-button' onClick={AddNewProduct}>Yeni Ürünü Ekle</button>

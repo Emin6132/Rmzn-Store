@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import '../Css/ShoppingBasket.css'
-import { useCartProductsListener, deleteCartProduct,  } from "../config/firebase"
+import { useCartProductsListener, deleteCartProduct, } from "../config/firebase"
 import { Link } from 'react-router-dom';
 
-const ShoppingBasket = ({ handleChange , login}) => {
+const ShoppingBasket = ({ handleChange, login }) => {
   const cartProducts = useCartProductsListener();
   const [price, setPrice] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -33,7 +33,7 @@ const ShoppingBasket = ({ handleChange , login}) => {
     <div className='shopping-basket-page'>
       <div className="shopping-basket-container">
         <h1 className='shopping-basket-container-title'>Sepetiniz</h1>
-        {loaded == true || login == true && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
+        {login == true && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
         {login == false && <p className='dont-have-product-msg'>Sepetinize ürün ekleyebilmek için giriş yapmanız lazım!!  <Link to="/login" className='Link'>Giriş Yap</Link></p>}
         <div className={`${cartProducts.length > 1 ? "basket-in-products-container" : ""}`}>
 
@@ -44,7 +44,11 @@ const ShoppingBasket = ({ handleChange , login}) => {
                   <div className='product-card-left'>
                     <img src={item.img} className='product-card-img' />
                     <div className='product-card-mid'>
+                      <span>
                       <p className='product-card-title'>{item.name}</p>
+                      <span>{item.selectedSize.map(size => 
+                        <span key={size} className='product-selected-sizes' >{size}</span>)}</span>
+                      </span>
                       <p className='product-card-price'>₺{item.price}</p>
                     </div>
                   </div>

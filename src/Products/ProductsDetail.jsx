@@ -22,8 +22,9 @@ const ProductsDetail = (props) => {
     const [product, setProduct] = useState(null);
     const [changeImg, setChangeImg] = useState("")
     const db = getFirestore(app)
-    const [numberWarning, setNumberWarning] = useState(false)
     const history = useNavigate();
+    const [selectedSizes, setSelectedSizes] = useState([]);
+
 
 
     useEffect(() => {
@@ -44,29 +45,15 @@ const ProductsDetail = (props) => {
         fetchProduct();
     }, [productId]);
 
-
-    const addBasketButton = () => {
-        if (props.login == false) {
-            history("/login")
-            toast.error("Alışveriş yapmak için sitemize giriş yapınız!!", {
-                className: "toast-message"
-            })
+    const handleSizeSelection = (size) => {
+        if (selectedSizes.includes(size)) {
+            setSelectedSizes(selectedSizes.filter(item => item !== size));
         } else {
-            if (numberOfProducts == 0) {
-                toast.warning("Üzgünüz. Almak istediğiniz ürün tükenmiş.", {
-                    className: "toast-message"
-                })
-                return;
-            }
-            else if (sizeNumber < 35) {
-                setNumberWarning(true)
-                return;
-            } else if (sizeNumber > 34) {
-                setNumberWarning(false)
-                props.handleClick(product)
-            }
+            setSelectedSizes([...selectedSizes, size]);
         }
-    }
+    };
+
+
 
 
     return (
@@ -106,28 +93,42 @@ const ProductsDetail = (props) => {
                         <div className='product-details-right-detail-container-bottom'>
                             <div className='choose-size-container'>
                                 <p className="choose-size-title">Beden Seçiniz</p>
-                                <div className='size-table'>
-                                    <div className="size-table-box">35</div>
-                                    <div className="size-table-box">36</div>
-                                    <div className="size-table-box">37</div>
-                                    <div className="size-table-box">38</div>
-                                    <div className="size-table-box">39</div>
-                                    <div className="size-table-box">40</div>
-                                    <div className="size-table-box">41</div>
-                                    <div className="size-table-box">42</div>
-                                    <div className="size-table-box">43</div>
-                                    <div className="size-table-box">44</div>
-                                    <div className="size-table-box">45</div>
-                                    <div className="size-table-box">46</div>
+                                <div className='shoesNumberTable'>
+                                    <div className="size-table">
+                                        {product.shoesNumbers?.map(size =>
+                                            <button
+                                                key={size}
+                                                className='size-table-box'
+                                                onClick={() => handleSizeSelection(size)}
+                                                style={{ backgroundColor: selectedSizes.includes(size) ? 'black' : 'white', color: selectedSizes.includes(size) ? 'white' : 'black' }}
+                                            >
+                                                {size}
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                                {numberWarning && <div className='number-warning-msg'>Lütfen bir numara seçiniz</div>}
                             </div>
-                            <button onClick={() => {if(props.login == true){ addProductCart(product.img, product.name, product.price), toast.success("Ürün Sepete Eklendi", {
-                                    className: "toast-message"
-                                })}else if(props.login == false){
-                                    toast.error("Sepete Eklemek İçin Giriş Yapınız", {
+                            <button onClick={() => {
+                                if (product.numberOfProducts == 0) {
+                                    toast.error("Üzgünüz. Almak istediğiniz ürün tükenmiş. Başka ürünlere göz gezdirebilirsiniz.", {
                                         className: "toast-message"
                                     })
+                                    return;
+                                }
+                                else if (selectedSizes.length == 0) {
+                                    toast.error("Lütfen Bedeninizi Seçin", {
+                                        className: "toast-message"
+                                    })
+                                    return;
+                                } else if (props.login == true) {
+                                    addProductCart(product.img, product.name, product.price, selectedSizes), toast.success("Ürün Sepete Eklendi", {
+                                        className: "toast-message"
+                                    })
+                                } else if (props.login == false) {
+                                    toast.error("Sepete Eklemek İçin Giriş Yapınız", {
+                                        className: "toast-message"
+                                    }),
+                                        history("/login")
                                 }
                             }} className='add-basket-button'> <i className="fa-solid fa-bag-shopping add-basket-icon"></i> Sepete Ekle</button>
                         </div>

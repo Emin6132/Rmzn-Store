@@ -138,13 +138,14 @@ export const deleteCartProduct = (id) => {
 }
 
 
-export const addProductCart = (img, name, price) => {
+export const addProductCart = (img, name, price, selectedSize) => {
     const uid = database.currentUser?.uid
     if (!uid) return;
     addDoc(cartProductRef, {
         img: img,
         name: name,
         price: price,
+        selectedSize:selectedSize,
         amount: 1,
         uid: uid,
     })
