@@ -10,7 +10,7 @@ const ShoppingBasket = ({ handleChange }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoaded(true);
-    }, 2000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -32,7 +32,7 @@ const ShoppingBasket = ({ handleChange }) => {
     <div className='shopping-basket-page'>
       <div className="shopping-basket-container">
         <h1 className='shopping-basket-container-title'>Sepetiniz</h1>
-        {loaded == false && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
+        {loaded == true && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
         <div className={`${cartProducts.length > 1 ? "basket-in-products-container" : ""}`}>
 
           {cartProducts.length > 0 && <div>
