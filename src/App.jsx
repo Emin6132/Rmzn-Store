@@ -257,7 +257,7 @@ function App() {
         <Route path='/' element={<RootLayout adminSettingModal={adminSettingModal} setAdminSettingModal={setAdminSettingModal} adminName={adminName} setAdminName={setAdminName} adminEmail={adminEmail} setAdminEmail={setAdminEmail} adminPassword={adminPassword} setAdminPassword={setAdminPassword} setAdminLogin={setAdminLogin} adminLogin={adminLogin} setLogin={setLogin} login={login} size={shoppingBasket.length} />}>
           <Route path='/' element={<Products adminLogin={adminLogin} />} />
           <Route path='/:productId' element={<ProductsDetail login={login}  handleClick={handleClick} shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
-          <Route path='/shopping-basket' element={<ShoppingBasket handleChange={handleChange} size={shoppingBasket.length} shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
+          <Route path='/shopping-basket' element={<ShoppingBasket login={login} handleChange={handleChange}  shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
           {adminLogin && <Route path='/add-product' element={<AddNewProduct />} />}
           {adminLogin == false && <Route path='/add-product' element={<Error />} />}
           {login == false && <Route path='/login' element={<RegisterLogin adminName={adminName} adminEmail={adminEmail} adminPassword={adminPassword} setAdminLogin={setAdminLogin} setLogin={setLogin} login={login} />} />}

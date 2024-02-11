@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import '../Css/ShoppingBasket.css'
-import { useCartProductsListener, deleteCartProduct, db } from "../config/firebase"
+import { useCartProductsListener, deleteCartProduct,  } from "../config/firebase"
+import { Link } from 'react-router-dom';
 
-const ShoppingBasket = ({ handleChange }) => {
+const ShoppingBasket = ({ handleChange , login}) => {
   const cartProducts = useCartProductsListener();
   const [price, setPrice] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -32,7 +33,8 @@ const ShoppingBasket = ({ handleChange }) => {
     <div className='shopping-basket-page'>
       <div className="shopping-basket-container">
         <h1 className='shopping-basket-container-title'>Sepetiniz</h1>
-        {loaded == true && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
+        {loaded == true || login == true && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
+        {login == false && <p className='dont-have-product-msg'>Sepetinize ürün ekleyebilmek için giriş yapmanız lazım!!  <Link to="/login" className='Link'>Giriş Yap</Link></p>}
         <div className={`${cartProducts.length > 1 ? "basket-in-products-container" : ""}`}>
 
           {cartProducts.length > 0 && <div>

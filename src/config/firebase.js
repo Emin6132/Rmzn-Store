@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"
-import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where, getDocs } from "firebase/firestore"
+import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react";
 
 
@@ -38,7 +38,8 @@ export const useProductsListener = () => {
     return bestSellingProducts;
 }
 
-export const useCartProductsListener = () => {
+
+export const useCartProductsListenerLength = () => {
 
     const [cart, setCart] = useState([]);
 
@@ -54,6 +55,57 @@ export const useCartProductsListener = () => {
     }, []);
     return cart;
 }
+/*
+export const useCartProductsListener1 = () => {
+    const [cart, setCart] = useState([]);
+    const uid = database.currentUser.uid; // Kullanıcının UID'sini al
+    const currentUser = database.currentUser;
+
+    useEffect(() => {
+        if (!currentUser) return;
+        if (!uid) return;
+        const userCartQuery = query(cartProductRef, where('uid', '==', uid)); // Kullanıcının sepetini sorgula
+
+        const unsubscribe = onSnapshot(userCartQuery, (snapshot) => {
+            const items = [];
+            snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() });
+            });
+            setCart(items);
+        });
+
+        return () => unsubscribe(); // useEffect içinde clean-up fonksiyonu
+    }, [currentUser]); // Kullanıcı kimliği değiştiğinde useEffect yeniden çalışır
+
+    return cart;
+};
+*/
+
+export const useCartProductsListener = () => {
+    const [cart, setCart] = useState([]);
+    const currentUser = database.currentUser; // Kullanıcı nesnesini al
+
+    useEffect(() => {
+        if (!currentUser) return; // Kullanıcı oturumu olmadan işlem yapmayı önle
+        const uid = currentUser.uid; // Kullanıcının UID'sini al
+
+        // carts koleksiyonunu referans al
+        const userCartQuery = query(cartProductRef, where('uid', '==', uid)); // Kullanıcının sepetini sorgula
+
+        const unsubscribe = onSnapshot(userCartQuery, (snapshot) => {
+            const items = [];
+            snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() });
+            });
+            setCart(items);
+        });
+
+        return () => unsubscribe(); // useEffect içinde clean-up fonksiyonu
+    }, [currentUser]); // Kullanıcı değiştiğinde useEffect yeniden çalışır
+
+    return cart;
+};
+
 
 /*
 export const useCartProductsListener = () => {

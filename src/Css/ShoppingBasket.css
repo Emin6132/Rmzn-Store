@@ -27,7 +27,7 @@
     flex-direction: column;
     display: flex;
     overflow-y: scroll;
-    height: 540px;
+    height: 548px;
     width: 830px;
 }
 .basket-in-products-container::-webkit-scrollbar{
@@ -135,7 +135,7 @@
     height: 35px;
     color: black;
     background-color: white;
-    width: 800px;
+    width: 805px;
 }
 .buy-button:hover{
     background-color: black;
