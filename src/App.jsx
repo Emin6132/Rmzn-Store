@@ -11,6 +11,7 @@ import ForgotPassword from './Pages/ForgotPassword'
 import toast from 'react-hot-toast'
 import AddNewProduct from './Pages/AddNewProduct'
 
+
 function App() {
   /*  const [recommendedProducts, setRecommendedProducts] = useState([
       {
@@ -255,7 +256,7 @@ function App() {
       <Routes>
         <Route path='/' element={<RootLayout adminSettingModal={adminSettingModal} setAdminSettingModal={setAdminSettingModal} adminName={adminName} setAdminName={setAdminName} adminEmail={adminEmail} setAdminEmail={setAdminEmail} adminPassword={adminPassword} setAdminPassword={setAdminPassword} setAdminLogin={setAdminLogin} adminLogin={adminLogin} setLogin={setLogin} login={login} size={shoppingBasket.length} />}>
           <Route path='/' element={<Products adminLogin={adminLogin} />} />
-          <Route path='/:productId' element={<ProductsDetail login={login} handleClick={handleClick} shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
+          <Route path='/:productId' element={<ProductsDetail login={login}  handleClick={handleClick} shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
           <Route path='/shopping-basket' element={<ShoppingBasket handleChange={handleChange} size={shoppingBasket.length} shoppingBasket={shoppingBasket} setShoppingBasket={setShoppingBasket} />} />
           {adminLogin && <Route path='/add-product' element={<AddNewProduct />} />}
           {adminLogin == false && <Route path='/add-product' element={<Error />} />}

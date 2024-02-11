@@ -5,10 +5,13 @@ import { Link } from "react-router-dom"
 import { database } from '../config/firebase';
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
+import { useCartProductsListener } from "../config/firebase"
 
-const Header = ({ size, adminLogin, login, setLogin, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
+
+const Header = ({  adminLogin, login, setLogin, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
     const [menuOpen, setMenuOpen] = useState(true)
     const history = useNavigate()
+    const cartProducts = useCartProductsListener();
 
     const menuOpenButton = () => {
         if (menuOpen == false) {
@@ -64,7 +67,7 @@ const Header = ({ size, adminLogin, login, setLogin, setAdminLogin, setAdminSett
                 <li className={`${adminLogin ? "navigation-option add-product-icon" : "hidden"}`} onClick={navigateAddProduct}><i className="fa-regular fa-square-plus add-product-icon"></i></li>
                 {adminLogin && <li className='navigation-option' onClick={visibleAdminSettings} ><i className="fa-solid fa-gear admin-settings"></i></li>}
                 {adminLogin == false && <li className='navigation-option'><i className="fa-regular fa-heart option-icon"></i></li>}
-                <li className='navigation-option'><Link to="/shopping-basket" className="navigation-option"><i className="fa-solid fa-bag-shopping"></i><div className="basket-in-product-number">{size}</div></Link></li>
+                <li className='navigation-option'><Link to="/shopping-basket" className="navigation-option"><i className="fa-solid fa-bag-shopping"></i><div className="basket-in-product-number">{cartProducts.length}</div></Link></li>
                 <li className={`${login ? "hidden" : "navigation-option"}`}><Link to="/login" className={`${login ? "hidden-login-link" : "login-link"}`}><i className="fa-regular fa-user login-icon"></i></Link></li>
                 {login == true && <li className="navigation-option logout-option" onClick={handleClick}><i className="fa-solid fa-right-from-bracket logout-icon"></i>Çıkış Yap</li>}
                 <li className={`${adminLogin ? "navigation-option admin-account" : "hidden"}`}><div className="admin-account-icon-bg"><i className="fa-solid fa-user-tie admin-account-icon"></i></div></li>

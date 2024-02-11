@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import '../Css/ShoppingBasket.css'
+import { useCartProductsListener, deleteCartProduct, db } from "../config/firebase"
 
-const ShoppingBasket = ({ setShoppingBasket, shoppingBasket, size, handleChange }) => {
+const ShoppingBasket = ({ handleChange }) => {
+  const cartProducts = useCartProductsListener();
   const [price, setPrice] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlePrice = () => {
     let ans = 0;
-    shoppingBasket.map((item) => (
+    cartProducts.map((item) => (
       ans += item.amount * item.price
     ))
     setPrice(ans);
   }
 
-  const handleRemove = (id) => {
-    const arr = shoppingBasket.filter((item) => item.id !== id);
-    setShoppingBasket(arr);
-    shoppingBasket.map((item) => (
-      item.amount = 1
-    ))
-    // handlePrice();
-  }
 
   useEffect(() => {
     handlePrice();
@@ -29,38 +32,46 @@ const ShoppingBasket = ({ setShoppingBasket, shoppingBasket, size, handleChange 
     <div className='shopping-basket-page'>
       <div className="shopping-basket-container">
         <h1 className='shopping-basket-container-title'>Sepetiniz</h1>
-        {size == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}
-        <div className={`${size > 1 ? "basket-in-products-container" : ""}`}>
+        {loaded == false && <div>{cartProducts.length == 0 && <p className='dont-have-product-msg'>Sepetinizde hiç ürün yok!!</p>}</div>}
+        <div className={`${cartProducts.length > 1 ? "basket-in-products-container" : ""}`}>
+
+          {cartProducts.length > 0 && <div>
+            {loaded ? (<div>
+              {cartProducts.map((item) => (
+                <div className='product-card' key={item.id}>
+                  <div className='product-card-left'>
+                    <img src={item.img} className='product-card-img' />
+                    <div className='product-card-mid'>
+                      <p className='product-card-title'>{item.name}</p>
+                      <p className='product-card-price'>₺{item.price}</p>
+                    </div>
+                  </div>
+                  <div className="product-card-right">
+                    <button className='remove-product-button' onClick={() => deleteCartProduct(item.id)}> Sepetten Çıkar </button>
+                    <div className="amount-container">
+                      <button className='decrease-button amount-change-button' onClick={() => handleChange(item, -1)}>-</button>
+                      <div className='product-amount'>{item.amount}</div>
+                      <button className='increase-button amount-change-button' onClick={() => handleChange(item, +1)}>+</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>) : (<div className="loading">Sepetteki Ürünler Yükleniyor...</div>)}
+
+          </div>}
 
 
-          {shoppingBasket.map((item) => (
-            <div className='product-card' key={item.id}>
-              <div className='product-card-left'>
-                <img src={item.img} className='product-card-img' />
-                <div className='product-card-mid'>
-                  <p className='product-card-title'>{item.title}</p>
-                  <p className='product-card-price'>₺{item.price}</p>
-                </div>
-              </div>
-              <div className="product-card-right">
-                <button className='remove-product-button' onClick={() => handleRemove(item.id)}> Ürünü Sil </button>
-                <div className="amount-container">
-                  <button className='decrease-button amount-change-button' onClick={() => handleChange(item, -1)}>-</button>
-                  <div className='product-amount'>{item.amount}</div>
-                  <button className='increase-button amount-change-button' onClick={() => handleChange(item, +1)}>+</button>
-                </div>
-              </div>
-            </div>
-          ))}
+
+
 
 
         </div>
-        {size > 0 && <div className='total-price'>
+        {loaded ? (<div>        {cartProducts.length > 0 && <div className='total-price'>
           Toplam Fiyat: ₺{price}
         </div>}
-        {size > 0 && <button className='buy-button'>
-          Satın Al
-        </button>}
+          {cartProducts.length > 0 && <button className='buy-button'>
+            Satın Al
+          </button>}</div>) : (<span></span>)}
       </div>
     </div>
   )

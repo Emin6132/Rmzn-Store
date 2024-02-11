@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useState } from "react"
 
+
 const RootLayout = ({ size, setLogin, login, adminLogin, adminName, adminEmail, adminPassword, setAdminName, setAdminEmail, setAdminPassword, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
 
   const visibleAdminSettings = () => {
@@ -34,8 +35,8 @@ const RootLayout = ({ size, setLogin, login, adminLogin, adminName, adminEmail, 
       setAdminPassword(newAdminPassword)
     }
 
-    if(newAdminName == "" || newAdminEmail == "" || newAdminPassword == ""){
-      
+    if (newAdminName == "" || newAdminEmail == "" || newAdminPassword == "") {
+
     }
 
 
@@ -68,7 +69,7 @@ const RootLayout = ({ size, setLogin, login, adminLogin, adminName, adminEmail, 
       {adminSettingModal && <div className="modal-bg" onClick={visibleAdminSettings}>
       </div>}
       <Toaster />
-      <Outlet />
+      {adminSettingModal == false && <Outlet />}
     </div>
   )
 }

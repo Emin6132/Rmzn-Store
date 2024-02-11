@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"
-import { getFirestore, collection, doc, onSnapshot, deleteDoc } from "firebase/firestore"
+import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where, getDocs } from "firebase/firestore"
 import { useEffect, useState } from "react";
 
 
@@ -19,6 +19,7 @@ export const database = getAuth(app)
 export const db = getFirestore(app)
 
 const productsRef = collection(db, "bestSellingProducts");
+const cartProductRef = collection(db, "carts");
 
 export const useProductsListener = () => {
 
@@ -37,17 +38,62 @@ export const useProductsListener = () => {
     return bestSellingProducts;
 }
 
-export const deleteProduct = (id) => {
-    deleteDoc(doc(db, "bestSellingProducts", id))
+export const useCartProductsListener = () => {
+
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        return onSnapshot(cartProductRef, (snapshot) => {
+            setCart(
+                snapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return { id: doc.id, ...data, }
+                })
+            )
+        });
+    }, []);
+    return cart;
 }
 
 /*
-export const addProduct = () => {
+export const useCartProductsListener = () => {
+    const [cart, setCart] = useState([]);
+
+    const uid = database.currentUser.uid
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(query(cartProductRef, where('x25naaruX3QSayBdCp162OV6P7m2', '==', uid)), (snapshot) => {
+            setCart(
+                snapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return { id: doc.id, ...data };
+                })
+            );
+        });
+        return () => unsubscribe();
+    }, []);
+
+    return cart;
+};
+*/
+
+
+export const deleteProduct = (id) => {
+    deleteDoc(doc(db, "bestSellingProducts", id))
+}
+export const deleteCartProduct = (id) => {
+    deleteDoc(doc(db, "carts", id))
+}
+
+
+export const addProductCart = (img, name, price) => {
     const uid = database.currentUser?.uid
     if (!uid) return;
-    addDoc(productsRef, {
-        name: "Product",
+    addDoc(cartProductRef, {
+        img: img,
+        name: name,
+        price: price,
+        amount: 1,
         uid: uid,
     })
 }
-*/
