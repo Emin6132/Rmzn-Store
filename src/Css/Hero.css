@@ -18,7 +18,6 @@
 .hero-item-1 {
     transition: 300ms;
     grid-row: 1 / 3;
-    cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-size: cover;
     background-position: 25% 100%;
@@ -33,6 +32,7 @@
 }
 
 .hero-item-1-text {
+    user-select: none;
     transition: 300ms;
     letter-spacing: 4px;
     font-weight: 750;
@@ -53,7 +53,6 @@
 
 .hero-item-2 {
     transition: 300ms;
-    cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-size: cover;
     background-position: 25% 100%;
@@ -68,6 +67,7 @@
 }
 
 .hero-item-2-text {
+    user-select: none;
     transition: 300ms;
     letter-spacing: 4px;
     font-weight: 750;
@@ -88,7 +88,6 @@
 .hero-item-3 {
     transition: 300ms;
     margin-top: 0px;
-    cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-size: cover;
     background-position: 25% 100%;
@@ -103,6 +102,7 @@
 }
 
 .hero-item-3-text {
+    user-select: none;
     transition: 300ms;
     letter-spacing: 4px;
     font-weight: 750;

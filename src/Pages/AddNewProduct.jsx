@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { db, database } from "../config/firebase"
 import { addDoc, collection } from 'firebase/firestore'
+import { v4 as uuidv4 } from 'uuid';
 
 const AddNewProduct = () => {
   const [productName, setProductName] = useState("")
@@ -18,12 +19,15 @@ const AddNewProduct = () => {
   const [productOtherImgThree, setProductOtherImgThree] = useState("")
   const [productOtherImgFour, setProductOtherImgFour] = useState("")
   const [productOtherImgFive, setProductOtherImgFive] = useState("")
-  const ref = collection(db, "bestSellingProducts")
   const [exampleCardView, setExampleCardView] = useState(false)
   const [productImgTypeFile, setProductImgTypeFile] = useState(true)
   const [changeTypeButtonText, setChangeTypeButtonText] = useState("URL")
   const history = useNavigate();
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const allProductsRef = collection(db, "allProducts")
+  const [questionModal, setQuestionModal] = useState(false)
+
+
 
 
   const VisibleExampleCard = (e) => {
@@ -38,10 +42,12 @@ const AddNewProduct = () => {
   const AddNewProduct = (e) => {
     e.preventDefault()
 
+    const nameLowerCase = productName.toLowerCase();
     const uid = database.currentUser?.uid
     if (!uid) return;
-    addDoc(ref, {
+    addDoc(allProductsRef, {
       uid: uid,
+      productId: uuidv4(),
       img: productMainImg,
       smallImg1: productOtherImgOne,
       smallImg2: productOtherImgTwo,
@@ -49,6 +55,8 @@ const AddNewProduct = () => {
       smallImg4: productOtherImgFour,
       smallImg5: productOtherImgFive,
       name: productName,
+      bestSelling: false,
+      nameLowerCase: nameLowerCase,
       price: productPrice,
       company: productCompany,
       color: productColor,
@@ -62,6 +70,51 @@ const AddNewProduct = () => {
     })
     history("/");
 
+    setProductName("")
+    setProductPrice("")
+    setProductCompany("")
+    setProductNumber("")
+    setProductColor("")
+    setProductWhom("")
+    setProductMainImg("")
+    setProductOtherImgOne("")
+    setProductOtherImgTwo("")
+    setProductOtherImgThree("")
+    setProductOtherImgFour("")
+    setProductOtherImgFive("")
+
+  }
+
+  const AddNewProductSpecial = (e) => {
+    e.preventDefault()
+
+    const nameLowerCase = productName.toLowerCase();
+    const uid = database.currentUser?.uid
+    if (!uid) return;
+    addDoc(allProductsRef, {
+      uid: uid,
+      productId: uuidv4(),
+      img: productMainImg,
+      smallImg1: productOtherImgOne,
+      smallImg2: productOtherImgTwo,
+      smallImg3: productOtherImgThree,
+      smallImg4: productOtherImgFour,
+      smallImg5: productOtherImgFive,
+      name: productName,
+      bestSelling: true,
+      nameLowerCase: nameLowerCase,
+      price: productPrice,
+      company: productCompany,
+      color: productColor,
+      whom: productWhom,
+      shoesNumbers: selectedSizes,
+      numberOfProducts: productNumber,
+      amount: 1,
+    })
+    toast.success("Öne Çıkan Ürünlere Ve Tüm Ürünlere Yeni Ürün Eklendi", {
+      className: "toast-message"
+    })
+    history("/");
 
     setProductName("")
     setProductPrice("")
@@ -75,6 +128,33 @@ const AddNewProduct = () => {
     setProductOtherImgThree("")
     setProductOtherImgFour("")
     setProductOtherImgFive("")
+
+  }
+
+  const OpenAddNewProductModal = (e) => {
+    e.preventDefault()
+
+    if (setProductMainImg == "" ||
+      productOtherImgOne == "" ||
+      productOtherImgTwo == "" ||
+      productOtherImgThree == "" ||
+      productOtherImgFour == "" ||
+      productOtherImgFive == "" ||
+      productName == "" ||
+      productPrice == "" ||
+      productCompany == "" ||
+      productColor == "" ||
+      productCompany == "" ||
+      selectedSizes == "" ||
+      productNumber == "") {
+      toast.error("Lütfen Bütün Alanları Doldurun", {
+        className: "toast-message"
+      })
+      return;
+    } else {
+      setQuestionModal(true)
+      setExampleCardView(false)
+    }
   }
 
 
@@ -99,9 +179,20 @@ const AddNewProduct = () => {
   };
   return (
     <div className='AddNewProductPage'>
+      {questionModal && <>
+        <div className='AddNewProductModal'>
+          <p className='modal-question'>Yeni Eklediğiniz Ürün Öne Çıkan Ürünlere Eklensin mi ?</p>
+
+
+          <div className='answer-button-container'>
+            <button className='modal-answer-button' onClick={AddNewProduct}>Hayır! Sadece Tüm Ürünlere Eklensin</button>
+            <button className='modal-answer-button' onClick={AddNewProductSpecial}>Evet! Öne Çıkan Ürünlere de Eklensin</button>
+          </div>
+        </div>
+        <div className="AddNewProductModalBg"></div></>}
       <div className='add-new-product-containers'>
         <form className='add-new-product-container'>
-          <h2 className='add-new-product-container-title'>Öne Çıkan Ürünlere Yeni Ürün Ekle</h2>
+          <h2 className='add-new-product-container-title'>Yeni Ürün Ekle</h2>
           <div className='add-new-product-mid'>
             <div className='add-new-product-images-containers'>
               <div className="new-product-input-container main-img-input-container">
@@ -206,7 +297,7 @@ const AddNewProduct = () => {
               )}
             </div>
           </div>
-          <button className='add-new-product-button' onClick={AddNewProduct}>Yeni Ürünü Ekle</button>
+          <button className='add-new-product-button' onClick={OpenAddNewProductModal}>Yeni Ürünü Ekle</button>
           <button className='visible-example-card-button' onClick={VisibleExampleCard}>Örnek Kart Göster</button>
         </form>
 

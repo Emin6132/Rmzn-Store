@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { useState } from "react"
 
 
-const RootLayout = ({ size, setLogin, login, adminLogin, adminName, adminEmail, adminPassword, setAdminName, setAdminEmail, setAdminPassword, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
+const RootLayout = ({selectedColor,selectedTrademark,setSelectedTrademark, setSelectedColor, uniqueColors, filteredDocs, uniqueTrademarks,searchTerm, setSearchTerm,size, setLogin, login, adminLogin, adminName, adminEmail, adminPassword, setAdminName, setAdminEmail, setAdminPassword, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
 
   const visibleAdminSettings = () => {
     if (adminSettingModal == true) {
@@ -45,7 +45,7 @@ const RootLayout = ({ size, setLogin, login, adminLogin, adminName, adminEmail, 
 
   return (
     <div className="RootLayout">
-      <Header size={size} adminSettingModal={adminSettingModal} setAdminSettingModal={setAdminSettingModal} setAdminLogin={setAdminLogin} adminLogin={adminLogin} setLogin={setLogin} login={login} />
+      <Header selectedColor={selectedColor} selectedTrademark={selectedTrademark} setSelectedTrademark={setSelectedTrademark} uniqueColors={uniqueColors} setSelectedColor={setSelectedColor} filteredDocs={filteredDocs} uniqueTrademarks={uniqueTrademarks} searchTerm={searchTerm} setSearchTerm={setSearchTerm} size={size} adminSettingModal={adminSettingModal} setAdminSettingModal={setAdminSettingModal} setAdminLogin={setAdminLogin} adminLogin={adminLogin} setLogin={setLogin} login={login} />
       {adminSettingModal && <form onSubmit={SaveNewAdminValues} className="admin-settings-modal">
         <h1 className="admin-settings-modal-title">
           Yönetici Ayarları

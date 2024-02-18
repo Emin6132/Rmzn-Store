@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"
-import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where } from "firebase/firestore"
+import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where, updateDoc, getDocs } from "firebase/firestore"
 import { useEffect, useState } from "react";
 
 
@@ -18,16 +18,36 @@ const app = initializeApp(firebaseConfig);
 export const database = getAuth(app)
 export const db = getFirestore(app)
 
-const productsRef = collection(db, "bestSellingProducts");
+const allProductsRef = collection(db, "allProducts");
 const cartProductRef = collection(db, "carts");
 
-export const useProductsListener = () => {
+export const useBestSellingsProductsListener = () => {
 
     const [bestSellingProducts, setBestSellingProducts] = useState([]);
 
     useEffect(() => {
-        return onSnapshot(productsRef, (snapshot) => {
-            setBestSellingProducts(
+        const userCartQuery = query(allProductsRef, where('bestSelling', '==', true)); // Kullanıcının sepetini sorgula
+
+        const unsubscribe = onSnapshot(userCartQuery, (snapshot) => {
+            const items = [];
+            snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() });
+            });
+            setBestSellingProducts(items);
+        });
+
+        return () => unsubscribe();
+    }, []);
+    return bestSellingProducts;
+}
+
+export const useAllProductsListener = () => {
+
+    const [allProducts, setAllProducts] = useState([]);
+
+    useEffect(() => {
+        return onSnapshot(allProductsRef, (snapshot) => {
+            setAllProducts(
                 snapshot.docs.map((doc) => {
                     const data = doc.data();
                     return { id: doc.id, ...data, }
@@ -35,10 +55,11 @@ export const useProductsListener = () => {
             )
         });
     }, []);
-    return bestSellingProducts;
+    return allProducts;
 }
 
 
+/*
 export const useCartProductsListenerLength = () => {
 
     const [cart, setCart] = useState([]);
@@ -107,46 +128,75 @@ export const useCartProductsListener = () => {
 };
 
 
-/*
-export const useCartProductsListener = () => {
-    const [cart, setCart] = useState([]);
-
-    const uid = database.currentUser.uid
-
-    useEffect(() => {
-        const unsubscribe = onSnapshot(query(cartProductRef, where('x25naaruX3QSayBdCp162OV6P7m2', '==', uid)), (snapshot) => {
-            setCart(
-                snapshot.docs.map((doc) => {
-                    const data = doc.data();
-                    return { id: doc.id, ...data };
-                })
-            );
-        });
-        return () => unsubscribe();
-    }, []);
-
-    return cart;
-};
-*/
-
-
-export const deleteProduct = (id) => {
-    deleteDoc(doc(db, "bestSellingProducts", id))
-}
 export const deleteCartProduct = (id) => {
     deleteDoc(doc(db, "carts", id))
 }
+/*
+export const deleteAllProductsProduct = (id) => {
+    deleteDoc(doc(db, "allProducts", id))
+}
+*/
 
 
-export const addProductCart = (img, name, price, selectedSize) => {
+export const deleteAllProductsProduct = (productId) => {
+    const allProductsq = query(collection(db, 'allProducts'), where('productId', '==', productId));
+
+    // Belgeleri getir
+    getDocs(allProductsq).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // Her bir belgeyi sil
+            deleteDoc(doc.ref);
+            console.log(`"${doc.id}" ID'sine sahip belge başarıyla silindi.`);
+        });
+    }).catch((error) => {
+        console.error('Belgeler getirilirken bir hata oluştu: ', error);
+    });
+
+    const cartsq = query(collection(db, 'carts'), where('productId', '==', productId));
+
+    // Belgeleri getir
+    getDocs(cartsq).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // Her bir belgeyi sil
+            deleteDoc(doc.ref);
+            console.log(`"${doc.id}" ID'sine sahip belge başarıyla silindi.`);
+        });
+    }).catch((error) => {
+        console.error('Belgeler getirilirken bir hata oluştu: ', error);
+    });
+}
+
+
+
+
+
+export const addProductCart = (productId, img, name, price, selectedSizes) => {
     const uid = database.currentUser?.uid
     if (!uid) return;
     addDoc(cartProductRef, {
+        productId: productId,
         img: img,
         name: name,
         price: price,
-        selectedSize:selectedSize,
+        selectedSizes: selectedSizes,
         amount: 1,
         uid: uid,
     })
+}
+export const addBestSellingProducts = async (id) => {
+    try {
+        const documentRef = doc(db, 'allProducts', id);
+        await updateDoc(documentRef, { bestSelling: true });
+    } catch (error) {
+        console.error('güncellenirken bir hata oluştu: ', error);
+    }
+}
+
+export const removeBestSellingProducts = async (id) => {
+    try {
+        const documentRef = doc(db, 'allProducts', id);
+        await updateDoc(documentRef, { bestSelling: false });
+    } catch (error) {
+        console.error('güncellenirken bir hata oluştu: ', error);
+    }
 }

@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import '../Css/ShoppingBasket.css'
-import { useCartProductsListener, deleteCartProduct, } from "../config/firebase"
 import { Link } from 'react-router-dom';
+import Loading from '../Components/Loading'
+import { initializeApp } from "firebase/app";
+import { getFirestore,  doc, updateDoc, getDoc } from "firebase/firestore"
+import { deleteCartProduct, useCartProductsListener } from "../config/firebase"
 
-const ShoppingBasket = ({ handleChange, login }) => {
+const ShoppingBasket = ({ login }) => {
   const cartProducts = useCartProductsListener();
   const [price, setPrice] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAJ4zicHyKOAUv_D8f_aSjpDBbX-gc26EA",
+    authDomain: "shoes-store-f904d.firebaseapp.com",
+    projectId: "shoes-store-f904d",
+    storageBucket: "shoes-store-f904d.appspot.com",
+    messagingSenderId: "398626237302",
+    appId: "1:398626237302:web:d255323cb17da96aba6857"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,6 +45,45 @@ const ShoppingBasket = ({ handleChange, login }) => {
     handlePrice();
   })
 
+
+  const increaseAmount = async (productId) => {
+    try {
+      const productRef = doc(db, "carts", productId); // products koleksiyonundaki belgeyi al
+      const productDoc = await getDoc(productRef); // Belgeyi al
+      const currentAmount = productDoc.data().amount; // Mevcut miktarı al
+
+      // Yeni miktarı hesapla
+      const newAmount = currentAmount + 1;
+
+      // Belgeyi güncelle
+      await updateDoc(productRef, { amount: newAmount });
+      console.log("Amount başarıyla arttırıldı.");
+    } catch (error) {
+      console.error("Amount artırılırken bir hata oluştu:", error);
+    }
+  };
+
+  const decreaseAmount = async (productId) => {
+    try {
+      const productRef = doc(db, "carts", productId); // products koleksiyonundaki belgeyi al
+      const productDoc = await getDoc(productRef); // Belgeyi al
+      const currentAmount = productDoc.data().amount; // Mevcut miktarı al
+
+      // Azaltma işlemi için mevcut miktarın kontrolü yapılabilir
+      if (currentAmount > 1) {
+        const newAmount = currentAmount - 1;
+
+        // Belgeyi güncelle
+        await updateDoc(productRef, { amount: newAmount });
+        console.log("Amount başarıyla azaltıldı.");
+      } else {
+        console.log("Amount zaten en düşük değerde.");
+      }
+    } catch (error) {
+      console.error("Amount azaltılırken bir hata oluştu:", error);
+    }
+  };
+
   return (
     <div className='shopping-basket-page'>
       <div className="shopping-basket-container">
@@ -45,9 +100,9 @@ const ShoppingBasket = ({ handleChange, login }) => {
                     <img src={item.img} className='product-card-img' />
                     <div className='product-card-mid'>
                       <span>
-                      <p className='product-card-title'>{item.name}</p>
-                      <span>{item.selectedSize.map(size => 
-                        <span key={size} className='product-selected-sizes' >{size}</span>)}</span>
+                        <p className='product-card-title'>{item.name}</p>
+                        <span>{item.selectedSizes.map(size =>
+                          <span key={size} className='product-selected-sizes' >{size}</span>)}</span>
                       </span>
                       <p className='product-card-price'>₺{item.price}</p>
                     </div>
@@ -55,14 +110,15 @@ const ShoppingBasket = ({ handleChange, login }) => {
                   <div className="product-card-right">
                     <button className='remove-product-button' onClick={() => deleteCartProduct(item.id)}> Sepetten Çıkar </button>
                     <div className="amount-container">
-                      <button className='decrease-button amount-change-button' onClick={() => handleChange(item, -1)}>-</button>
-                      <div className='product-amount'>{item.amount}</div>
-                      <button className='increase-button amount-change-button' onClick={() => handleChange(item, +1)}>+</button>
+                    <button className='decrease-button amount-change-button' onClick={() => decreaseAmount(item.id)}> - </button>
+<div className='product-amount'>{item.amount}</div>
+<button className='increase-button amount-change-button' onClick={() => increaseAmount(item.id)}> + </button>
+
                     </div>
                   </div>
                 </div>
               ))}
-            </div>) : (<div className="loading">Sepetteki Ürünler Yükleniyor...</div>)}
+            </div>) : (<div className="loading"><Loading /> Sepetteki Ürünler Yükleniyor...</div>)}
 
           </div>}
 
