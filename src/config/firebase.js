@@ -128,9 +128,7 @@ export const useCartProductsListener = () => {
 };
 
 
-export const deleteCartProduct = (id) => {
-    deleteDoc(doc(db, "carts", id))
-}
+
 /*
 export const deleteAllProductsProduct = (id) => {
     deleteDoc(doc(db, "allProducts", id))
