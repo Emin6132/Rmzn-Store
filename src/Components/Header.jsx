@@ -4,13 +4,13 @@ import { Link } from "react-router-dom"
 import { database } from '../config/firebase';
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
-import { useCartProductsListener } from "../config/firebase"
+import { useCartProductsListenerLength } from "../config/firebase"
 import React, { useState } from 'react';
 
 const Header = ({ selectedColor, selectedTrademark, setSelectedTrademark, setSelectedColor, uniqueColors, filteredDocs, uniqueTrademarks, searchTerm, setSearchTerm, adminLogin, login, setLogin, setAdminLogin, setAdminSettingModal, adminSettingModal }) => {
     const [menuOpen, setMenuOpen] = useState(true)
     const history = useNavigate()
-    const cartProducts = useCartProductsListener();
+    const cartProducts = useCartProductsListenerLength();
     const [filterModalValue, setFilterModalValue] = useState(false)
 
     const openFilterContainer = () => {

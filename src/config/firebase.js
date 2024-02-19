@@ -59,23 +59,27 @@ export const useAllProductsListener = () => {
 }
 
 
-/*
-export const useCartProductsListenerLength = () => {
 
-    const [cart, setCart] = useState([]);
+export const useCartProductsListenerLength = () => {
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        return onSnapshot(cartProductRef, (snapshot) => {
-            setCart(
-                snapshot.docs.map((doc) => {
-                    const data = doc.data();
-                    return { id: doc.id, ...data, }
-                })
-            )
-        });
-    }, []);
-    return cart;
+      const fetchProducts = async () => {
+        const productsCollection = collection(db, 'carts');
+        const snapshot = await getDocs(productsCollection);
+        const productList = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProducts(productList);
+      };
+    
+      fetchProducts();
+    }, [products]);
+
+    return products;
 }
+
 /*
 export const useCartProductsListener1 = () => {
     const [cart, setCart] = useState([]);
