@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../Css/RegisterLogin.css"
 
-const LoginAndRegister = ({ setLogin, setAdminLogin , adminEmail ,adminPassword , adminName}) => {
+const LoginAndRegister = ({ setLogin, setAdminLogin, adminEmail, adminPassword, adminName }) => {
     const [panelValue, setPanelValue] = useState(true)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(true);
 
     const slideToRightPanel = () => {
         setPanelValue(true)
@@ -19,6 +20,10 @@ const LoginAndRegister = ({ setLogin, setAdminLogin , adminEmail ,adminPassword 
     const slideToLeftPanel = () => {
         setPanelValue(false)
     }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const history = useNavigate();
 
@@ -42,12 +47,12 @@ const LoginAndRegister = ({ setLogin, setAdminLogin , adminEmail ,adminPassword 
         signInWithEmailAndPassword(database, email, password)
             .then((data) => {
                 console.log(data, "authData");
-                history("/"); 
+                history("/");
                 toast.success("Giriş Yapıldı", {
                     className: "toast-message"
                 })
                 if (email === `${adminEmail}` && password === `${adminPassword}`) {
-                    setAdminLogin(true) 
+                    setAdminLogin(true)
                     setEmail("");
                     setPassword("");
                     toast.success(`Hoşgeldin ${adminName}`, {
@@ -77,7 +82,11 @@ const LoginAndRegister = ({ setLogin, setAdminLogin , adminEmail ,adminPassword 
                     <form onSubmit={signupSubmit} className="form">
                         <h1 className="form-title">Hesap Oluşturun</h1>
                         <input className="form-input" type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
-                        <input className="form-input" type="password" placeholder="Şifre" onChange={(e) => setPassword(e.target.value)} value={password} />
+                        <input className="form-input" type={showPassword ? 'password' : 'text'} placeholder="Şifre" onChange={(e) => setPassword(e.target.value)} value={password} />
+                        <button type="button" className="u-password-visibilty-button" onClick={togglePasswordVisibility}>
+                            {showPassword ? (<div><img src="https://icons.veryicon.com/png/o/miscellaneous/zoeyhao/password-visible-5.png"
+                                className="visibilty-img" /></div>) : (<div><img src="https://icons.veryicon.com/png/o/miscellaneous/zoeyhao/password-not-visible-4.png" className="visibilty-img" /></div>)}
+                        </button>
                         <button className="form-button">Hesap Oluştur</button>
                     </form>
                 </div>
@@ -85,7 +94,11 @@ const LoginAndRegister = ({ setLogin, setAdminLogin , adminEmail ,adminPassword 
                     <form onSubmit={signinSubmit} className="form">
                         <h1 className="form-title">Oturum Açın</h1>
                         <input className="form-input" type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
-                        <input className="form-input" type="password" placeholder="Şifre" onChange={(e) => setPassword(e.target.value)} value={password} />
+                        <input className="form-input" type={showPassword ? 'password' : 'text'} placeholder="Şifre" onChange={(e) => setPassword(e.target.value)} value={password} />
+                        <button type="button" className="password-visibilty-button" onClick={togglePasswordVisibility}>
+                            {showPassword ? (<div><img src="https://icons.veryicon.com/png/o/miscellaneous/zoeyhao/password-visible-5.png"
+                                className="visibilty-img" /></div>) : (<div><img src="https://icons.veryicon.com/png/o/miscellaneous/zoeyhao/password-not-visible-4.png" className="visibilty-img" /></div>)}
+                        </button>
                         <a className="reset-password" onClick={handleReset}>Şifreni mi unuttun?</a>
                         <button className="form-button">Giriş Yap</button>
                     </form>
