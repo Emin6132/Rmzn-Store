@@ -59,7 +59,6 @@ const ShoppingBasket = ({ login }) => {
     deleteDoc(doc(db, "carts", productId))
   }
 
-  // Ürün miktarını artırmak için bir fonksiyon
   const increaseAmount = async (productId) => {
     const updatedProducts = products.map(product => {
       if (product.id === productId) {
@@ -69,7 +68,6 @@ const ShoppingBasket = ({ login }) => {
     });
     setProducts(updatedProducts);
 
-    // Ürün miktarını Firebase'e güncelle
     const db = getFirestore();
     const productRef = doc(db, 'carts', productId);
     await updateDoc(productRef, { amount: updatedProducts.find(product => product.id === productId).amount });
@@ -84,13 +82,11 @@ const ShoppingBasket = ({ login }) => {
     });
     setProducts(updatedProducts);
 
-    // Ürün miktarını Firebase'e güncelle
     const db = getFirestore();
     const productRef = doc(db, 'carts', productId);
     await updateDoc(productRef, { amount: updatedProducts.find(product => product.id === productId).amount });
   };
 
-  // Her ürünün ara toplamını almak için bir fonksiyon
   const getProductSubtotal = (product) => {
     return product.amount * product.price;
   };
