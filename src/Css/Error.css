@@ -10,4 +10,7 @@
 }
 .turn-back-button{
     color: gray;
+    border-bottom: 1px solid gray;
+    font-weight: bold;
+    cursor: pointer;
 }

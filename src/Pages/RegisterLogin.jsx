@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { database } from "../config/firebase";
 import {
     createUserWithEmailAndPassword,
@@ -8,11 +9,14 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../Css/RegisterLogin.css"
 
-const LoginAndRegister = ({ setLogin, setAdminLogin, adminEmail, adminPassword, adminName }) => {
+const LoginAndRegister = ({ setLogin, setAdminLogin, }) => {
     const [panelValue, setPanelValue] = useState(true)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(true);
+    const [adminEmail, setAdminEmail] = useState(null);
+    const [adminName, setAdminName] = useState(null);
+    const [adminPassword, setAdminPassword] = useState(null);
 
     const slideToRightPanel = () => {
         setPanelValue(true)
@@ -26,6 +30,28 @@ const LoginAndRegister = ({ setLogin, setAdminLogin, adminEmail, adminPassword, 
     };
 
     const history = useNavigate();
+
+
+    useEffect(() => {
+        const fetchDocumentFields = async () => {
+            try {
+                const db = getFirestore();
+                const documentRef = doc(db, "adminInfos", "adminInfo");
+                const documentSnap = await getDoc(documentRef);
+                if (documentSnap.exists()) {
+                    const documentData = documentSnap.data();
+                    setAdminPassword(documentData.password);
+                    setAdminName(documentData.name);
+                    setAdminEmail(documentData.email);
+                }
+            } catch (error) {
+                console.error("Belge alınamadı:", error);
+            }
+        };
+
+        fetchDocumentFields();
+    }, []);
+
 
     const signupSubmit = (e) => {
         e.preventDefault();
@@ -51,7 +77,7 @@ const LoginAndRegister = ({ setLogin, setAdminLogin, adminEmail, adminPassword, 
                 toast.success("Giriş Yapıldı", {
                     className: "toast-message"
                 })
-                if (email === `${adminEmail}` && password === `${adminPassword}`) {
+                if (email === adminEmail && password === adminPassword) {
                     setAdminLogin(true)
                     setEmail("");
                     setPassword("");

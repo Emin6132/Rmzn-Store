@@ -80,31 +80,6 @@ export const useCartProductsListenerLength = () => {
     return products;
 }
 
-/*
-export const useCartProductsListener1 = () => {
-    const [cart, setCart] = useState([]);
-    const uid = database.currentUser.uid; // Kullanıcının UID'sini al
-    const currentUser = database.currentUser;
-
-    useEffect(() => {
-        if (!currentUser) return;
-        if (!uid) return;
-        const userCartQuery = query(cartProductRef, where('uid', '==', uid)); // Kullanıcının sepetini sorgula
-
-        const unsubscribe = onSnapshot(userCartQuery, (snapshot) => {
-            const items = [];
-            snapshot.forEach((doc) => {
-                items.push({ id: doc.id, ...doc.data() });
-            });
-            setCart(items);
-        });
-
-        return () => unsubscribe(); // useEffect içinde clean-up fonksiyonu
-    }, [currentUser]); // Kullanıcı kimliği değiştiğinde useEffect yeniden çalışır
-
-    return cart;
-};
-*/
 
 export const useCartProductsListener = () => {
     const [cart, setCart] = useState([]);
@@ -130,14 +105,6 @@ export const useCartProductsListener = () => {
 
     return cart;
 };
-
-
-
-/*
-export const deleteAllProductsProduct = (id) => {
-    deleteDoc(doc(db, "allProducts", id))
-}
-*/
 
 
 export const deleteAllProductsProduct = (productId) => {

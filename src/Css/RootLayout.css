@@ -55,7 +55,7 @@
 
 .admin-settings-input-container {
     margin-bottom: 30px;
-    width: 300px;
+    width: 350px;
 }
 
 .admin-settings-label {
@@ -74,7 +74,8 @@
 .save-setting-button {
     cursor: pointer;
     transition: 300ms;
-    width: 300px;
+    margin-right: -5px;
+    width: 355px;
     height: 30px;
     border: 1px solid black;
     background: none;
