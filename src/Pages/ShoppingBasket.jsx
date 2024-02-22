@@ -3,7 +3,8 @@ import '../Css/ShoppingBasket.css'
 import { Link } from 'react-router-dom';
 import Loading from '../Components/Loading'
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, updateDoc ,deleteDoc, getDocs, collection } from "firebase/firestore"
+import { getAuth } from "firebase/auth"
+import { getFirestore, doc, updateDoc, deleteDoc, query, where, onSnapshot,collection } from "firebase/firestore"
 
 const ShoppingBasket = ({ login }) => {
   const [price, setPrice] = useState(0);
@@ -19,7 +20,8 @@ const ShoppingBasket = ({ login }) => {
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const database = getAuth(app)
+  const db = getFirestore(app)
 
 
   useEffect(() => {
@@ -38,22 +40,28 @@ const ShoppingBasket = ({ login }) => {
     setPrice(ans);
   }
 
-
   const [products, setProducts] = useState([]);
+  const currentUser = database.currentUser; // Kullanıcı nesnesini al
+  const cartProductRef = collection(db, "carts");
+
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const productsCollection = collection(db, 'carts');
-      const snapshot = await getDocs(productsCollection);
-      const productList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setProducts(productList);
-    };
+    if (!currentUser) return; // Kullanıcı oturumu olmadan işlem yapmayı önle
+    const uid = currentUser.uid; // Kullanıcının UID'sini al
 
-    fetchProducts();
-  }, [products]);
+    // carts koleksiyonunu referans al
+    const userCartQuery = query(cartProductRef, where('uid', '==', uid)); // Kullanıcının sepetini sorgula
+
+    const unsubscribe = onSnapshot(userCartQuery, (snapshot) => {
+      const items = [];
+      snapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      setProducts(items);
+    });
+
+    return () => unsubscribe(); // useEffect içinde clean-up fonksiyonu
+  }, [currentUser]); // Kullanıcı değiştiğinde useEffect yeniden çalışır
 
   const deleteCartProduct = (productId) => {
     deleteDoc(doc(db, "carts", productId))

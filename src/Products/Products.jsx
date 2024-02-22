@@ -26,7 +26,7 @@ const Products = (props) => {
 
     return (
         <div className="home-page">
-            {props.filteredDocs.length > 0 && props.searchTerm.length < 1 && <div className="searched-products-view">
+            {/*   {props.filteredDocs.length > 0 && props.searchTerm.length < 1 && <div className="searched-products-view">
                 {props.filteredDocs.map((item, index) => (
                     <div key={index} className="Card">
                         {props.adminLogin && <button className="delete-product-button"
@@ -51,6 +51,7 @@ const Products = (props) => {
                     </div>
                 ))}
             </div>}
+                */}
 
             {props.searchTerm.length > 0 && <div className="searched-products-view">
                 {props.searchResults.map((item) => (
@@ -85,7 +86,7 @@ const Products = (props) => {
 
 
 
-            {props.searchTerm.length == 0 && props.filteredDocs.length == 0 && <>
+            {props.searchTerm.length == 0 && <>
                 <Hero />
                 <div>
                     <div className="products-container" >

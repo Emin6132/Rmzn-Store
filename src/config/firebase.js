@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth"
 import { getFirestore, collection, doc, onSnapshot, deleteDoc, addDoc, query, where, updateDoc, getDocs } from "firebase/firestore"
 import { useEffect, useState } from "react";
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyAJ4zicHyKOAUv_D8f_aSjpDBbX-gc26EA",
     authDomain: "shoes-store-f904d.firebaseapp.com",
@@ -40,7 +39,6 @@ export const useBestSellingsProductsListener = () => {
     }, []);
     return bestSellingProducts;
 }
-
 export const useAllProductsListener = () => {
 
     const [allProducts, setAllProducts] = useState([]);
@@ -57,30 +55,6 @@ export const useAllProductsListener = () => {
     }, []);
     return allProducts;
 }
-
-
-
-export const useCartProductsListenerLength = () => {
-    const [products, setProducts] = useState([]);
-
-    useEffect(() => {
-      const fetchProducts = async () => {
-        const productsCollection = collection(db, 'carts');
-        const snapshot = await getDocs(productsCollection);
-        const productList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setProducts(productList);
-      };
-    
-      fetchProducts();
-    }, [products]);
-
-    return products;
-}
-
-
 export const useCartProductsListener = () => {
     const [cart, setCart] = useState([]);
     const currentUser = database.currentUser; // Kullanıcı nesnesini al
@@ -105,8 +79,6 @@ export const useCartProductsListener = () => {
 
     return cart;
 };
-
-
 export const deleteAllProductsProduct = (productId) => {
     const allProductsq = query(collection(db, 'allProducts'), where('productId', '==', productId));
 
@@ -134,11 +106,6 @@ export const deleteAllProductsProduct = (productId) => {
         console.error('Belgeler getirilirken bir hata oluştu: ', error);
     });
 }
-
-
-
-
-
 export const addProductCart = (productId, img, name, price, selectedSizes) => {
     const uid = database.currentUser?.uid
     if (!uid) return;
@@ -160,7 +127,6 @@ export const addBestSellingProducts = async (id) => {
         console.error('güncellenirken bir hata oluştu: ', error);
     }
 }
-
 export const removeBestSellingProducts = async (id) => {
     try {
         const documentRef = doc(db, 'allProducts', id);
